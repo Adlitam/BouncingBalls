@@ -14,7 +14,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public final class BouncingBalls extends Animator {
 
-	private static final double PIXELS_PER_METER = 30;
+	private static final double PIXELS_PER_METER = 20;
 
 	private IBouncingBallsModel model;
 	private double modelHeight;
@@ -31,7 +31,7 @@ public final class BouncingBalls extends Animator {
 	@Override
 	protected void drawFrame(Graphics2D g) {
 		// Clear the canvas
-		g.setColor(Color.WHITE);
+		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, canvasWidth, canvasHeight);
 		// Update the model
 		model.tick(deltaT);

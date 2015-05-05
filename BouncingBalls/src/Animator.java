@@ -59,7 +59,7 @@ public abstract class Animator extends JApplet {
 				animationLoop();
 			}
 		};
-		// animationThread.setPriority(Thread.MAX_PRIORITY);
+		animationThread.setPriority(Thread.MAX_PRIORITY);
 		animationThread.start();
 	}
 
