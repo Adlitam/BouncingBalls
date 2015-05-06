@@ -28,15 +28,15 @@ public class DummyModel implements IBouncingBallsModel {
 		radiusAB = 1; 
 		a = 3;
 		b = 4;
-		gravity = 15;
+		gravity = -15;
 		
 		
 	}
 
 	public void tick(double deltaT) {
-	//	velocityBeforeY += gravity * deltaT;
-	//	velocityBeforeB += gravity * deltaT;
-		if (x < radiusXY || x + radiusXY > areaWidth ) {
+		velocityBeforeY += gravity * deltaT;
+		velocityBeforeB += gravity * deltaT;
+		if (x < radiusXY || x > areaWidth - radiusXY) {
 			velocityBeforeX *= -1;
 		}
 		if (y < radiusXY || y > areaHeight - radiusXY) {
@@ -49,7 +49,12 @@ public class DummyModel implements IBouncingBallsModel {
 		if (b < radiusAB || b > areaHeight - radiusAB ) {
 			velocityBeforeB *= -1;
 		}
-		
+		/*
+		if(x == areaHeight - radiusXY){
+			velocityBeforeY *= -1 * 0.9; 
+			
+		}
+		*/
 		
 		
 		x += velocityBeforeX * deltaT;
