@@ -17,13 +17,13 @@ public final class BouncingBalls extends Animator {
 	private static final double PIXELS_PER_METER = 20;
 
 	private IBouncingBallsModel model;
-	private double modelHeight;
+	private double modelHeight, modelWidth ;
 	private double deltaT;
 
 	@Override
 	public void init() {
 		super.init();
-		double modelWidth = canvasWidth / PIXELS_PER_METER;
+		modelWidth = canvasWidth / PIXELS_PER_METER;
 		modelHeight = canvasHeight / PIXELS_PER_METER;
 		model = new DummyModel(modelWidth, modelHeight);
 	}
