@@ -81,10 +81,10 @@ public class DummyModel implements IBouncingBallsModel {
 		double vector2 = -(-(massXY*h1+massAB*h2)-(massXY*-(h2-h1)))/(massXY+massAB);
 		if ((hypotenuse-radiusXY-radiusAB) <= 0){
 			System.out.println("collision!!!");
-			x = polarToRectX(vector1,alpha1);
-			y = polarToRectY(vector1,alpha1);
-			a = polarToRectX(vector2,alpha2);
-			b = polarToRectY(vector2,alpha2);
+			velocityX = polarToRectX(vector1,alpha1);
+			velocityY = polarToRectY(vector1,alpha1);
+			velocityA = polarToRectX(vector2,alpha2);
+			velocityB = polarToRectY(vector2,alpha2);
 			
 			/*alpha1 = Math.atan2(y,x);
 			alpha2 = Math.atan2(b,a);
