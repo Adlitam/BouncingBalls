@@ -73,8 +73,19 @@ public class DummyModel implements IBouncingBallsModel {
 			velocityB += gravity*deltaT;
 		}
 		
+		double h1 = Math.sqrt(velocityX*velocityX+velocityY*velocityY);
+		alpha1 = Math.asin(velocityY/h1);
+		double h2 = Math.sqrt(velocityA*velocityA+velocityB*velocityB);
+		alpha2 = Math.asin(velocityB/h2);
+		double vector1 = -(-(massXY*h1+massAB*h2)+(massAB*-(h2-h1)))/(massXY+massAB);
+		double vector2 = -(-(massXY*h1+massAB*h2)-(massXY*-(h2-h1)))/(massXY+massAB);
 		if ((hypotenuse-radiusXY-radiusAB) <= 0){
 			System.out.println("collision!!!");
+			x = polarToRectX(vector1,alpha1);
+			y = polarToRectY(vector1,alpha1);
+			a = polarToRectX(vector2,alpha2);
+			b = polarToRectY(vector2,alpha2);
+			
 			/*alpha1 = Math.atan2(y,x);
 			alpha2 = Math.atan2(b,a);
 			alpha = alpha1 - alpha2;
@@ -89,6 +100,13 @@ public class DummyModel implements IBouncingBallsModel {
 		y += velocityY * deltaT;
 		a += velocityA * deltaT;
 		b += velocityB * deltaT;
+	}
+	
+	public double polarToRectX(double r, double alpha){
+		return r*Math.cos(alpha);
+	}
+	public double polarToRectY(double r, double alpha){
+		return r*Math.sin(alpha);
 	}
 
 	public List<Ellipse2D> getBalls() {
