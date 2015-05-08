@@ -14,7 +14,7 @@ public class DummyModel implements IBouncingBallsModel {
 	private double a, b, velocityA, velocityB, radiusAB, massAB;
 	
 	private double gravity, deltaX, deltaY, hypotenuse, alpha1,
-		alpha2, tempAlpha, tempX, tempY, tempA, tempB;
+		alpha2, alpha, tempX, tempY, tempA, tempB;
 
 	public DummyModel(double width, double height) {
 		this.areaWidth = width;
@@ -35,7 +35,7 @@ public class DummyModel implements IBouncingBallsModel {
 		deltaY = 0;
 		alpha1 = 0;
 		alpha2 = 0;
-		tempAlpha = 0;
+		alpha = 0;
 		
 	}
 
@@ -45,9 +45,9 @@ public class DummyModel implements IBouncingBallsModel {
 		double nextA = (a + velocityA * deltaT);
 		double nextB = (b + velocityB * deltaT);
 		
-		//deltaX = Math.abs(x-a);
-		//deltaY = Math.abs(y-b);
-		//hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+		deltaX = Math.abs(x-a);
+		deltaY = Math.abs(y-b);
+		hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
 		
 		if(nextX < radiusXY || nextX > areaWidth - radiusXY) {
 			velocityX *= -1;
@@ -64,23 +64,24 @@ public class DummyModel implements IBouncingBallsModel {
 			velocityB *= -1;
 		}
 		
-		if((nextY + velocityY*deltaT) > radiusXY){
+		if(nextY > radiusXY){
 			velocityY += gravity*deltaT;
 		}
-		if((nextB + velocityB*deltaT) > radiusAB){
+		if(nextB > radiusAB){
 			velocityB += gravity*deltaT;
 		}
 		
-		/*if ((hypotenuse-radiusXY-radiusAB) <= 0){
-			System.out.println("colission!!!");
-			alpha1 = Math.atan2(y, x);
-			alpha2 = Math.atan2(b, a);
-			tempAlpha = alpha1 - alpha2;
-			tempX = (Math.sqrt(x*x+y*y))*Math.cos(tempAlpha);
-			tempY = (Math.sqrt(x*x+y*y))*Math.sin(tempAlpha);
-			tempA = (Math.sqrt(a*a+b*b))*Math.cos(tempAlpha);
-			tempB = (Math.sqrt(a*a+b*b))*Math.sin(tempAlpha);
-		}*/
+		if ((hypotenuse-radiusXY-radiusAB) <= 0){
+			System.out.println("collision!!!");
+			/*alpha1 = Math.atan2(y,x);
+			alpha2 = Math.atan2(b,a);
+			alpha = alpha1 - alpha2;
+			tempX = (Math.sqrt(x*x+y*y))*Math.cos(alpha);
+			tempY = (Math.sqrt(x*x+y*y))*Math.sin(alpha);
+			tempA = (Math.sqrt(a*a+b*b))*Math.cos(alpha);
+			tempB = (Math.sqrt(a*a+b*b))*Math.sin(alpha);*/
+			
+		}
 		
 		x += velocityX * deltaT;
 		y += velocityY * deltaT;
@@ -90,7 +91,7 @@ public class DummyModel implements IBouncingBallsModel {
 
 	public List<Ellipse2D> getBalls() {
 		List<Ellipse2D> myBalls = new LinkedList<Ellipse2D>();
-		myBalls.add(new Ellipse2D.Double(x - radiusXY, y - radiusXY, 2 * radiusXY, 2 * radiusXY));
+		myBalls.add(new Ellipse2D.Double(x - radiusXY, y - radiusXY, 2*radiusXY, 2*radiusXY));
 		myBalls.add(new Ellipse2D.Double(a - radiusAB , b - radiusAB , 2*radiusAB,2* radiusAB));
 		return myBalls;
 	}
