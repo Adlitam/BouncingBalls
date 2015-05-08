@@ -13,7 +13,8 @@ public class DummyModel implements IBouncingBallsModel {
 	//second ball
 	private double a, b, velocityA, velocityB, radiusAB, massAB;
 	
-	private double gravity, deltaX, deltaY, hypotenuse;
+	private double gravity, deltaX, deltaY, hypotenuse, alpha1,
+		alpha2, tempAlpha, tempX, tempY, tempA, tempB;
 
 	public DummyModel(double width, double height) {
 		this.areaWidth = width;
@@ -32,6 +33,9 @@ public class DummyModel implements IBouncingBallsModel {
 		hypotenuse = 0;
 		deltaX = 0;
 		deltaY = 0;
+		alpha1 = 0;
+		alpha2 = 0;
+		tempAlpha = 0;
 		
 	}
 
@@ -55,7 +59,14 @@ public class DummyModel implements IBouncingBallsModel {
 			velocityB *= -1;
 		}
 		if ((hypotenuse-radiusXY-radiusAB) <= 0){
-			
+			System.out.println("colission!!!");
+			alpha1 = Math.atan2(y, x);
+			alpha2 = Math.atan2(b, a);
+			tempAlpha = alpha1 - alpha2;
+			tempX = (Math.sqrt(x*x+y*y))*Math.cos(tempAlpha);
+			tempY = (Math.sqrt(x*x+y*y))*Math.sin(tempAlpha);
+			tempA = (Math.sqrt(a*a+b*b))*Math.cos(tempAlpha);
+			tempB = (Math.sqrt(a*a+b*b))*Math.sin(tempAlpha);
 		}
 
 		
