@@ -20,7 +20,7 @@ public class DummyModel implements IBouncingBallsModel {
 		this.areaWidth = width;
 		this.areaHeight = height;
 		x = 1;
-		y = 1;
+		y = 2;
 		velocityX = 5;
 		velocityY = 6;
 		velocityA = 4.3;
@@ -29,7 +29,7 @@ public class DummyModel implements IBouncingBallsModel {
 		radiusAB = 1; 
 		a = 3;
 		b = 4;
-		gravity = -15;
+		gravity = -9.82;
 		hypotenuse = 0;
 		deltaX = 0;
 		deltaY = 0;
@@ -44,9 +44,11 @@ public class DummyModel implements IBouncingBallsModel {
 		double nextY = (y + velocityY * deltaT);
 		double nextA = (a + velocityA * deltaT);
 		double nextB = (b + velocityB * deltaT);
+		
 		//deltaX = Math.abs(x-a);
 		//deltaY = Math.abs(y-b);
 		//hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+		
 		if(nextX < radiusXY || nextX > areaWidth - radiusXY) {
 			velocityX *= -1;
 		}
@@ -54,12 +56,21 @@ public class DummyModel implements IBouncingBallsModel {
 			
 			velocityY *= -1;
 		}
+		
 		if(nextA < radiusAB || nextA > areaWidth - radiusAB) {
 			velocityA *= -1;
 		}
 		if(nextB < radiusAB || nextB > areaHeight - radiusAB) {
 			velocityB *= -1;
 		}
+		
+		if((nextY + velocityY*deltaT) > radiusXY){
+			velocityY += gravity*deltaT;
+		}
+		if((nextB + velocityB*deltaT) > radiusAB){
+			velocityB += gravity*deltaT;
+		}
+		
 		/*if ((hypotenuse-radiusXY-radiusAB) <= 0){
 			System.out.println("colission!!!");
 			alpha1 = Math.atan2(y, x);
@@ -70,23 +81,12 @@ public class DummyModel implements IBouncingBallsModel {
 			tempA = (Math.sqrt(a*a+b*b))*Math.cos(tempAlpha);
 			tempB = (Math.sqrt(a*a+b*b))*Math.sin(tempAlpha);
 		}*/
-
-		addGravity(nextY, velocityY, radiusXY, deltaT);
-		addGravity(nextB, velocityB, radiusAB, deltaT);
 		
 		x += velocityX * deltaT;
 		y += velocityY * deltaT;
 		a += velocityA * deltaT;
 		b += velocityB * deltaT;
 	}
-	
-	
-	public void addGravity(double next, double velocity, double radius, double d){
-		if((next + velocity*d) > radius){
-			velocity += gravity*d;
-		}
-	}
-	
 
 	public List<Ellipse2D> getBalls() {
 		List<Ellipse2D> myBalls = new LinkedList<Ellipse2D>();
