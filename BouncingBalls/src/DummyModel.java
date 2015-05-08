@@ -8,59 +8,61 @@ public class DummyModel implements IBouncingBallsModel {
 	private final double areaWidth;
 	private final double areaHeight;
 	
-	//Variabler för första bollen
-	private double x, y, velocityBeforeX, velocityBeforeY, velocityAfterX, velocityAfterY, radiusXY,massXY,
-	//Variabler för andra bollen
-	a,b,velocityBeforeA,velocityBeforeB,velocityAfterA,velocityAfterB,radiusAB,massAB,
-	//Gravity
-	gravity;
+	//first ball
+	private double x, y, velocityX, velocityY, radiusXY, massXY;
+	//second ball
+	private double a, b, velocityA, velocityB, radiusAB, massAB;
+	
+	private double gravity, deltaX, deltaY, hypotenuse;
 
 	public DummyModel(double width, double height) {
 		this.areaWidth = width;
 		this.areaHeight = height;
 		x = 1;
 		y = 1;
-		velocityBeforeX = 5;
-		velocityBeforeY = 6;
-		velocityBeforeA = 4.3;
-		velocityBeforeB = 6;
+		velocityX = 5;
+		velocityY = 6;
+		velocityA = 4.3;
+		velocityB = 6;
 		radiusXY = 1;
 		radiusAB = 1; 
 		a = 3;
 		b = 4;
 		gravity = -15;
-		
+		hypotenuse = 0;
+		deltaX = 0;
+		deltaY = 0;
 		
 	}
 
 	public void tick(double deltaT) {
-		velocityBeforeY += gravity * deltaT;
-		velocityBeforeB += gravity * deltaT;
+		velocityY += gravity * deltaT;
+		velocityB += gravity * deltaT;
+		deltaX = Math.abs(x-a);
+		deltaY = Math.abs(y-b);
+		hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
 		if (x < radiusXY || x > areaWidth - radiusXY) {
-			velocityBeforeX *= -1;
+			velocityX *= -1;
 		}
 		if (y < radiusXY || y > areaHeight - radiusXY) {
 			
-			velocityBeforeY *= -1;
+			velocityY *= -1;
 		}
 		if (a < radiusAB || a > areaWidth - radiusAB) {
-			velocityBeforeA *= -1;
+			velocityA *= -1;
 		}
 		if (b < radiusAB || b > areaHeight - radiusAB ) {
-			velocityBeforeB *= -1;
+			velocityB *= -1;
 		}
-		/*
-		if(x == areaHeight - radiusXY){
-			velocityBeforeY *= -1 * 0.9; 
+		if ((hypotenuse-radiusXY-radiusAB) <= 0){
 			
 		}
-		*/
+
 		
-		
-		x += velocityBeforeX * deltaT;
-		y += velocityBeforeY * deltaT;
-		a += velocityBeforeA * deltaT;
-		b += velocityBeforeB * deltaT;
+		x += velocityX * deltaT;
+		y += velocityY * deltaT;
+		a += velocityA * deltaT;
+		b += velocityB * deltaT;
 	}
 
 	public List<Ellipse2D> getBalls() {
