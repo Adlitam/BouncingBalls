@@ -36,6 +36,8 @@ public class DummyModel implements IBouncingBallsModel {
 		alpha1 = 0;
 		alpha2 = 0;
 		alpha = 0;
+		massXY = 2;
+		massAB = 4;
 		
 	}
 
