@@ -40,25 +40,27 @@ public class DummyModel implements IBouncingBallsModel {
 	}
 
 	public void tick(double deltaT) {
-		velocityY += gravity * deltaT;
-		velocityB += gravity * deltaT;
-		deltaX = Math.abs(x-a);
-		deltaY = Math.abs(y-b);
-		hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
-		if (x < radiusXY || x > areaWidth - radiusXY) {
+		double nextX = (x + velocityX * deltaT);
+		double nextY = (y + velocityY * deltaT);
+		double nextA = (a + velocityA * deltaT);
+		double nextB = (b + velocityB * deltaT);
+		//deltaX = Math.abs(x-a);
+		//deltaY = Math.abs(y-b);
+		//hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
+		if(nextX < radiusXY || nextX > areaWidth - radiusXY) {
 			velocityX *= -1;
 		}
-		if (y < radiusXY || y > areaHeight - radiusXY) {
+		if(nextY < radiusXY || nextY > areaHeight - radiusXY) {
 			
 			velocityY *= -1;
 		}
-		if (a < radiusAB || a > areaWidth - radiusAB) {
+		if(nextA < radiusAB || nextA > areaWidth - radiusAB) {
 			velocityA *= -1;
 		}
-		if (b < radiusAB || b > areaHeight - radiusAB ) {
+		if(nextB < radiusAB || nextB > areaHeight - radiusAB) {
 			velocityB *= -1;
 		}
-		if ((hypotenuse-radiusXY-radiusAB) <= 0){
+		/*if ((hypotenuse-radiusXY-radiusAB) <= 0){
 			System.out.println("colission!!!");
 			alpha1 = Math.atan2(y, x);
 			alpha2 = Math.atan2(b, a);
@@ -67,14 +69,24 @@ public class DummyModel implements IBouncingBallsModel {
 			tempY = (Math.sqrt(x*x+y*y))*Math.sin(tempAlpha);
 			tempA = (Math.sqrt(a*a+b*b))*Math.cos(tempAlpha);
 			tempB = (Math.sqrt(a*a+b*b))*Math.sin(tempAlpha);
-		}
+		}*/
 
+		addGravity(nextY, velocityY, radiusXY, deltaT);
+		addGravity(nextB, velocityB, radiusAB, deltaT);
 		
 		x += velocityX * deltaT;
 		y += velocityY * deltaT;
 		a += velocityA * deltaT;
 		b += velocityB * deltaT;
 	}
+	
+	
+	public void addGravity(double next, double velocity, double radius, double d){
+		if((next + velocity*d) > radius){
+			velocity += gravity*d;
+		}
+	}
+	
 
 	public List<Ellipse2D> getBalls() {
 		List<Ellipse2D> myBalls = new LinkedList<Ellipse2D>();
