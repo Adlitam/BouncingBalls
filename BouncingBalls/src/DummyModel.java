@@ -13,8 +13,8 @@ public class DummyModel implements IBouncingBallsModel {
 	//second ball
 	private double a, b, velocityA, velocityB, radiusAB, massAB;
 	
-	private double gravity, deltaX, deltaY, hypotenuse, alpha1,
-		alpha2, alpha, tempX, tempY, tempA, tempB;
+	private double gravity, deltaX, deltaY, hypotenuse, alpha,
+		tempX, tempY, tempA, tempB, collisionX, collisionY, r, r2;
 
 	public DummyModel(double width, double height) {
 		this.areaWidth = width;
@@ -33,8 +33,6 @@ public class DummyModel implements IBouncingBallsModel {
 		hypotenuse = 0;
 		deltaX = 0;
 		deltaY = 0;
-		alpha1 = 0;
-		alpha2 = 0;
 		alpha = 0;
 		massXY = 2;
 		massAB = 4;
@@ -47,8 +45,8 @@ public class DummyModel implements IBouncingBallsModel {
 		double nextA = (a + velocityA * deltaT);
 		double nextB = (b + velocityB * deltaT);
 		
-		deltaX = Math.abs(x-a);
-		deltaY = Math.abs(y-b);
+		deltaX = (x-a);
+		deltaY = (y-b);
 		hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
 		
 		if(nextX < radiusXY || nextX > areaWidth - radiusXY) {
@@ -72,28 +70,32 @@ public class DummyModel implements IBouncingBallsModel {
 		if(nextB > radiusAB){
 			velocityB += gravity*deltaT;
 		}
-		
-		double h1 = Math.sqrt(velocityX*velocityX+velocityY*velocityY);
-		alpha1 = Math.asin(velocityY/h1);
-		double h2 = Math.sqrt(velocityA*velocityA+velocityB*velocityB);
-		alpha2 = Math.asin(velocityB/h2);
-		double vector1 = -(-(massXY*h1+massAB*h2)+(massAB*-(h2-h1)))/(massXY+massAB);
-		double vector2 = -(-(massXY*h1+massAB*h2)-(massXY*-(h2-h1)))/(massXY+massAB);
+		//double h1 = Math.sqrt(velocityX*velocityX+velocityY*velocityY);
+		//double h2 = Math.sqrt(velocityA*velocityA+velocityB*velocityB);
 		if ((hypotenuse-radiusXY-radiusAB) <= 0){
+			collisionY = y-b;
+			collisionX = x-a;
+			alpha = Math.atan2(collisionY, collisionX);
+			double Velocity1R = rectToPolarR(velocityX, velocityY);
+			double Velocity2R = rectToPolarR(velocityA, velocityB);
+			double Velocity1Angle = rectToPolarAngle(velocityX, velocityY);
+			double Velocity2Angle = rectToPolarAngle(velocityA, velocityB);
+			double newAngle1 = Velocity1Angle - alpha;
+			double newAngle2 = Velocity2Angle - alpha;
+			velocityX = polarToRectX(Velocity1R,newAngle1);
+			velocityY = polarToRectY(Velocity1R,newAngle1);
+			velocityA = polarToRectX(Velocity2R,newAngle2);
+			velocityB = polarToRectY(Velocity2R,newAngle2);
+			
+			double velocityXTemp = -(-(massXY*velocityX+massAB*velocityA)+(massAB*-(velocityA-velocityX)))/(massXY+massAB);
+			double velocityATemp = -(-(massXY*velocityX+massAB*velocityA)-(massXY*-(velocityA-velocityX)))/(massXY+massAB);
+			
+			
 			System.out.println("collision!!!");
-			velocityX = polarToRectX(vector1,alpha1);
-			velocityY = polarToRectY(vector1,alpha1);
-			velocityA = polarToRectX(vector2,alpha2);
-			velocityB = polarToRectY(vector2,alpha2);
-			
-			/*alpha1 = Math.atan2(y,x);
-			alpha2 = Math.atan2(b,a);
-			alpha = alpha1 - alpha2;
-			tempX = (Math.sqrt(x*x+y*y))*Math.cos(alpha);
-			tempY = (Math.sqrt(x*x+y*y))*Math.sin(alpha);
-			tempA = (Math.sqrt(a*a+b*b))*Math.cos(alpha);
-			tempB = (Math.sqrt(a*a+b*b))*Math.sin(alpha);*/
-			
+			velocityX = ;
+			velocityY = ;
+			velocityA = ;
+			velocityB = ;
 		}
 		
 		x += velocityX * deltaT;
@@ -107,6 +109,13 @@ public class DummyModel implements IBouncingBallsModel {
 	}
 	public double polarToRectY(double r, double alpha){
 		return r*Math.sin(alpha);
+	}
+	
+	public double rectToPolarR(double x, double y){
+		return Math.sqrt(x*x+y*y);
+	}
+	public double rectToPolarAngle(double x, double y){
+		return Math.atan2(y,x);
 	}
 
 	public List<Ellipse2D> getBalls() {
