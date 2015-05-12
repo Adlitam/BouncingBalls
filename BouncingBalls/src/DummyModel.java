@@ -21,19 +21,15 @@ public class DummyModel implements IBouncingBallsModel {
 		this.areaHeight = height;
 		x = 1;
 		y = 2;
-		velocityX = 5;
-		velocityY = 6;
-		velocityA = 4.3;
-		velocityB = 6;
+		velocityX = 1;
+		velocityY = 1;
+		velocityA = 1.3;
+		velocityB = 2;
 		radiusXY = 1;
 		radiusAB = 1; 
 		a = 3;
 		b = 4;
 		gravity = -9.82;
-		hypotenuse = 0;
-		deltaX = 0;
-		deltaY = 0;
-		alpha = 0;
 		massXY = 2;
 		massAB = 4;
 		
@@ -49,53 +45,57 @@ public class DummyModel implements IBouncingBallsModel {
 		deltaY = (y-b);
 		hypotenuse = Math.sqrt(deltaX*deltaX+deltaY*deltaY);
 		
-		if(nextX < radiusXY || nextX > areaWidth - radiusXY) {
+		if(nextX <= radiusXY || nextX >= areaWidth - radiusXY) {
 			velocityX *= -1;
 		}
-		if(nextY < radiusXY || nextY > areaHeight - radiusXY) {
+		if(nextY <= radiusXY || nextY >= areaHeight - radiusXY) {
 			
 			velocityY *= -1;
 		}
 		
-		if(nextA < radiusAB || nextA > areaWidth - radiusAB) {
+		if(nextA <= radiusAB || nextA >= areaWidth - radiusAB) {
 			velocityA *= -1;
 		}
-		if(nextB < radiusAB || nextB > areaHeight - radiusAB) {
+		if(nextB <= radiusAB || nextB >= areaHeight - radiusAB) {
 			velocityB *= -1;
 		}
 		
-		if(nextY > radiusXY){
+		if(nextY >= radiusXY){
 			velocityY += gravity*deltaT;
 		}
-		if(nextB > radiusAB){
+		if(nextB >= radiusAB){
 			velocityB += gravity*deltaT;
 		}
-		//double h1 = Math.sqrt(velocityX*velocityX+velocityY*velocityY);
-		//double h2 = Math.sqrt(velocityA*velocityA+velocityB*velocityB);
+		
 		if ((hypotenuse-radiusXY-radiusAB) <= 0){
-			collisionY = y-b;
-			collisionX = x-a;
+			collisionY = Math.abs(y-b);
+			collisionX = Math.abs(x-a);
+			
 			alpha = Math.atan2(collisionY, collisionX);
 			double Velocity1R = rectToPolarR(velocityX, velocityY);
 			double Velocity2R = rectToPolarR(velocityA, velocityB);
+			
 			double Velocity1Angle = rectToPolarAngle(velocityX, velocityY);
 			double Velocity2Angle = rectToPolarAngle(velocityA, velocityB);
+			
 			double newAngle1 = Velocity1Angle - alpha;
 			double newAngle2 = Velocity2Angle - alpha;
-			velocityX = polarToRectX(Velocity1R,newAngle1);
-			velocityY = polarToRectY(Velocity1R,newAngle1);
-			velocityA = polarToRectX(Velocity2R,newAngle2);
-			velocityB = polarToRectY(Velocity2R,newAngle2);
 			
-			double velocityXTemp = -(-(massXY*velocityX+massAB*velocityA)+(massAB*-(velocityA-velocityX)))/(massXY+massAB);
-			double velocityATemp = -(-(massXY*velocityX+massAB*velocityA)-(massXY*-(velocityA-velocityX)))/(massXY+massAB);
+			double velocity1XTemp = polarToRectX(Velocity1R,newAngle1);
+			double velocity1YTemp = polarToRectY(Velocity1R,newAngle1);
+			double velocity2XTemp = polarToRectX(Velocity2R,newAngle2);
+			double velocity2YTemp = polarToRectY(Velocity2R,newAngle2);
+			
+			double velocityXTemp = -(massXY*velocity1XTemp+massAB*velocity2XTemp)+(massAB*-(velocity2XTemp-velocity1XTemp))/(massXY+massAB);
+			double velocityATemp = -(massXY*velocity1XTemp+massAB*velocity2YTemp)-(massXY*-(velocity2YTemp-velocity1XTemp))/(massXY+massAB);
 			
 			
 			System.out.println("collision!!!");
-			velocityX = ;
-			velocityY = ;
-			velocityA = ;
-			velocityB = ;
+			velocityX = velocityXTemp;
+			velocityY = velocity1YTemp;
+			velocityA = velocityATemp;
+			velocityB = velocity2YTemp;
+		
 		}
 		
 		x += velocityX * deltaT;
